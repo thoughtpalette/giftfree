@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
+import { LoginForm } from '../pages/login/login.component';
 
 interface SignupInput {
   email: String
@@ -7,6 +8,18 @@ interface SignupInput {
   lastname: String
   password: String
 }
+
+const LOGIN_USER = gql`
+  mutation Mutation($data: LoginInput!) {
+    login(data: $data) {
+      user {
+        id,
+        email,
+      },
+      accessToken
+    }
+  }
+`
 
 const CREATE_USER = gql`
   mutation Mutation($user: SignupInput!) {
@@ -26,22 +39,19 @@ export class UserService {
 
   constructor(private apollo: Apollo) { }
 
-  login() {}
+  login(data: LoginForm) {
+    this.apollo.mutate({ 
+      mutation: LOGIN_USER, 
+      variables: { data }
+    }).subscribe(res => console.log(res))
+  }
 
   logout() {}
 
-  create = async (user: SignupInput) => {
+  create(user: SignupInput){
     this.apollo.mutate({ 
       mutation: CREATE_USER, 
       variables: { user }
-    }).subscribe(
-      ({ data }) => {
-        console.log('got data', data);
-      },
-      error => {
-        console.log('there was an error sending the query', error);
-      },
-    );
-
+    }).subscribe(res => console.log(res))
   }
 }

@@ -1,0 +1,32 @@
+<header-nav></header-nav>
+
+<div class="container">
+
+    <div class="sm:container">
+        <form autocomplete="off" class="flex flex-col" (ngSubmit)="createUser()">
+            <label for="firstName">
+                First Name
+                <input class="border" type="text" name="firstname" [(ngModel)]="user.firstname">
+            </label>
+            
+            <label for="lastName">
+                Last Name
+
+                <input class="border" type="text" name="lasttname" [(ngModel)]="user.lastname">
+            </label>
+
+            <label for="email">
+                Email
+
+                <input class="border" type="email" name="email" [(ngModel)]="user.email">
+            </label>
+
+            <label for="password">
+                Password
+
+                <input class="border" type="password" name="password" [(ngModel)]="user.password">
+            </label>
+            <button class="border bg-slate-600 text-cyan-50">Create</button>
+        </form>            
+    </div>
+</div>

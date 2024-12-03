@@ -3,11 +3,9 @@ import { FormsModule } from '@angular/forms'
 import { HeaderNavComponent } from "../../shared/header-nav/header-nav.component";
 import { UserService } from '../../services/user.service';
 
-interface SignupInput {
-  email: String
-  firstname: String
-  lastname: String
-  password: String
+export interface LoginForm {
+  email: string
+  password: string
 }
 
 @Component({
@@ -18,13 +16,11 @@ interface SignupInput {
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  user: SignupInput = { firstname: '', lastname: '', email: '', password: ''}
+  form: LoginForm = { email: '', password: '' }
 
-  constructor(private userSvc: UserService) {
+  constructor(private userSvc: UserService){}
+
+  login() {
+    this.userSvc.login(this.form)
   }
-
-  createUser() {
-    this.userSvc.create(this.user)
-  }
-
 }
