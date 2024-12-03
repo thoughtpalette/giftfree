@@ -1,12 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 
-interface User {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
+interface SignupInput {
+  email: String
+  firstname: String
+  lastname: String
+  password: String
 }
+
+const CREATE_USER = gql`
+  mutation Mutation($user: SignupInput!) {
+    signup(data: $user) {
+      user {
+        email,
+        id,
+      }
+    }
+  }
+`
 
 @Injectable({
   providedIn: 'root'
@@ -19,32 +30,18 @@ export class UserService {
 
   logout() {}
 
-  create(user: User) {
-
-    const createUser = gql`
-    mutation AuthUser($firstName: String!, $lastName: String!, $email: String!, $password: String!) {
-      signup(
-        firstname: $firstName,
-        lastname: $lastName,
-        email: $email,
-        password: $password
-      ) {
-        id
-        firstname
-        lastname
-        email
-        password
-      }
-    }`
-
-
+  create = async (user: SignupInput) => {
     this.apollo.mutate({ 
-      mutation: createUser, 
-      variables: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        password: user.password
-    }});
+      mutation: CREATE_USER, 
+      variables: { user }
+    }).subscribe(
+      ({ data }) => {
+        console.log('got data', data);
+      },
+      error => {
+        console.log('there was an error sending the query', error);
+      },
+    );
+
   }
 }
