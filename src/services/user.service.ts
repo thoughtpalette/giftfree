@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { LoginForm } from '../pages/login/login.component';
+import { Router } from '@angular/router';
 
 interface SignupInput {
   email: String
   firstname: String
   lastname: String
   password: String
+}
+
+interface LoginResp {
+  login: {
+    user: {
+      id: string
+    }
+  }
 }
 
 const LOGIN_USER = gql`
@@ -37,13 +46,17 @@ const CREATE_USER = gql`
 })
 export class UserService {
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo, private router: Router) { }
 
   login(data: LoginForm) {
     this.apollo.mutate({ 
       mutation: LOGIN_USER, 
       variables: { data }
-    }).subscribe(res => console.log(res))
+    }).subscribe((res) => {
+      console.log(res)
+      const userId = (res.data as LoginResp)?.login?.user.id
+      this.router.navigate(['lists', userId])
+    })
   }
 
   logout() {}
