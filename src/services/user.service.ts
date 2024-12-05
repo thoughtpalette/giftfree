@@ -55,7 +55,7 @@ export class UserService {
     }).subscribe((res) => {
       console.log(res)
       const userId = (res.data as LoginResp)?.login?.user.id
-      this.router.navigate(['lists', userId])
+      this.router.navigate([userId])
     })
   }
 

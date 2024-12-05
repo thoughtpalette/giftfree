@@ -1,0 +1,8 @@
+<header-nav></header-nav>
+
+<div class="container mx-auto">
+    @let listRes = list$ | async;
+    @let list = listRes.data.getList;
+
+    {{ list | json }}
+</div>

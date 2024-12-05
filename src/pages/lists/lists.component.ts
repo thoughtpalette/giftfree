@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { HeaderNavComponent } from "../../shared/header-nav/header-nav.component";
-import { map, Observable, take } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Apollo, gql } from 'apollo-angular';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 const GET_LISTS = gql`
   query getWishLists($id: String!) {
-    getLists(id: $id) {
+    getLists(userId: $id) {
       id,
       name,
+      items {
+        id,
+        name,
+        price,
+        purchased,
+        url
+      } 
     }
   }
 `
@@ -17,7 +24,7 @@ const GET_LISTS = gql`
 @Component({
   selector: 'lists',
   standalone: true,
-  imports: [HeaderNavComponent, AsyncPipe, JsonPipe],
+  imports: [HeaderNavComponent, AsyncPipe, JsonPipe, RouterLink],
   templateUrl: './lists.component.html',
   styleUrl: './lists.component.scss'
 })
@@ -28,7 +35,7 @@ export class ListsComponent implements OnInit {
 
   ngOnInit(): void {
     this.lists$ = this.apollo.query({ query: GET_LISTS, variables: {
-      id: this.route.snapshot.paramMap.get('id')
+      id: this.route.snapshot.paramMap.get('userId')
     } })
   }
 }
