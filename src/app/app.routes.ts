@@ -24,7 +24,7 @@ export const routes: Routes = [
         component: ListsComponent
     },
     {
-        path: ':userId/:listId',
+        path: 'list/:listId',
         component: ListComponent
     },
     {
