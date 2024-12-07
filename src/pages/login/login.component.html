@@ -1,20 +1,57 @@
 <header-nav></header-nav>
 
 <div class="container">
-    <div class="sm:container">
-        <form autocomplete="off" class="flex flex-col" (ngSubmit)="login()">
-            <label for="email">
-                Email 
+    <div class="w-96 mx-auto border p-6 rounded mt-24">
+        <h1 class="text-2xl font-bold mb-6">Login</h1>
+        <form 
+            autocomplete="off" 
+            class="flex flex-col w-100" 
+            (ngSubmit)="login()">
+            <label class="form-control w-full mb-6" for="name">
+                <div class="label">
+                  <span class="label-text">Email</span>
+                </div>
 
-                <input class="border" type="text" name="email" [(ngModel)]="form.email">
+                @let emailInvalid = email.invalid && (email.dirty || email.touched);
+                <input
+                    required
+                    class="input input-bordered w-full" 
+                    [class.input-error]="emailInvalid"
+                    [class.mb-2]="emailInvalid"
+                    type="text" 
+                    id="email"
+                    name="email"
+                    #email="ngModel"
+                    placeholder="Enter your email"
+                    [(ngModel)]="form.email"
+                />
+
+                @if(email.hasError('required') && (email.dirty || email.touched)) {
+                    <span class="error-msg text-red-600 pl-4">Email is required.</span>
+                }
+            </label>
+            <label class="form-control w-full mb-6" for="price">
+                <div class="label">
+                  <span class="label-text">Password</span>
+                </div>
+                <input
+                    required 
+                    class="input input-bordered w-full" 
+                    [class.input-error]="password.invalid && (password.dirty || password.touched)"
+                    type="password" 
+                    name="password"
+                    #password="ngModel"
+                    placeholder="Password" 
+                    [(ngModel)]="form.password"
+                />
             </label>
 
-            <label for="password">
-                Password
+            <span class="text-sm text-center mb-4">No account? 
+                <a class="btn-link" [routerLink]="['/signup']">Sign up here</a>
+            </span>
 
-                <input class="border" type="password" name="password" [(ngModel)]="form.password">
-            </label>
-            <button class="border bg-slate-600 text-cyan-50">Login</button>
+            @let formValid = email.valid && password.valid;
+            <button class="btn btn-primary" [disabled]="!formValid">Login</button>
         </form>
     </div>
 </div>

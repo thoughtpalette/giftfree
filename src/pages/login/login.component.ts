@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms'
 import { HeaderNavComponent } from "../../shared/header-nav/header-nav.component";
 import { UserService } from '../../services/user.service';
+import { RouterLink } from '@angular/router';
 
 export interface LoginForm {
   email: string
@@ -11,7 +12,7 @@ export interface LoginForm {
 @Component({
   selector: 'login',
   standalone: true,
-  imports: [HeaderNavComponent, FormsModule],
+  imports: [HeaderNavComponent, FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })

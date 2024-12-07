@@ -3,18 +3,25 @@
 @let listsRes = lists$ | async;
 @let lists = listsRes?.data?.getLists;
 
-<p>lists works!</p>
-
-<div class="flex">
-    @for(list of lists; track list.id) {
-        <div class="flex flex-col border-zinc-400  bg-slate-300">
-            <a [routerLink]="['/list', list.id]">Go to List</a>
-            <p class="block">{{ list.id }}</p>
-            <p class="block">{{ list.name }}</p>
-        </div>
-    } @empty {
-        <p>No Lists, please add</p>
-    }
+<div class="container">
+    <div class="test-grid">
+        @for(list of lists; track list.id) {
+            <div class="card card-compact bg-base-100 shadow-xl">
+                <figure>
+                  <img
+                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                    alt="{{list.name}}" />
+                </figure>
+                <div class="card-body">
+                  <h2 class="card-title">{{ list.name }}</h2>
+                  <!-- <p>{{ item.notes }}</p> -->
+                  <div class="card-actions justify-end">
+                    <a class="btn btn-secondary" [routerLink]="['/list', list.id]">View List</a>
+                  </div>
+                </div>
+            </div>
+        } @empty {
+            <p>No Lists, please add</p>
+        }
+    </div>
 </div>
-
-<div>{{ lists?.data?.getLists | json }}</div>

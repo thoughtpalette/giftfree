@@ -1,6 +1,6 @@
 import { AsyncPipe, CurrencyPipe, JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { HeaderNavComponent } from '../../shared/header-nav/header-nav.component';
@@ -31,6 +31,10 @@ const GET_LIST = gql`
     getList(listId: $listId) {
       id,
       name,
+      author {
+        id,
+        firstname
+      },
       items {
         id,
         name,
@@ -49,13 +53,20 @@ const ADD_ITEM = gql`
       listId
     }
   }
+`
 
+const REMOVE_ITEM = gql`
+  mutation deleteItem($id: ID!, $listId: ID!) {
+    deleteItem(id: $id, listId: $listId){
+      list
+    }
+  }
 `
 
 @Component({
   selector: 'list',
   standalone: true,
-  imports: [HeaderNavComponent, AsyncPipe, JsonPipe, CurrencyPipe, FormsModule],
+  imports: [HeaderNavComponent, AsyncPipe, JsonPipe, CurrencyPipe, FormsModule, RouterLink],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
