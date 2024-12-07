@@ -1,6 +1,6 @@
 <header-nav></header-nav>
 
-<div class="container mx-auto">
+<div class="container p-20">
     @let listRes = list$ | async;
     @let list = listRes?.data?.getList;
 
@@ -10,6 +10,7 @@
         <h1 class="text-3xl font-bold my-6">{{ list?.name }} - <a class="btn-link" [routerLink]="['/', list.author.id]">{{ list.author.firstname }}</a></h1>
         <button 
             class="btn btn-primary btn-sm px-4 py-2"
+            title="Add Item"
             (click)="addItemModal.showModal()">
                 Add Item
         </button>
@@ -28,7 +29,7 @@
                   <h2 class="card-title">{{ item.name }}</h2>
                   <p>{{ item.notes }}</p>
                   <div class="card-actions justify-end">
-                    <button class="btn btn-secondary">View Online</button>
+                    <button class="btn btn-secondary" title="View Online">View Online</button>
                   </div>
                 </div>
             </div>
@@ -38,7 +39,7 @@
     <dialog class="add-item-modal w-1/2 p-5 rounded" #addItemModal>
         <div class="modal-header flex justify-between mb-4">
             <h3 class="text-lg font-bold">Add Item</h3>
-            <button type="button" (click)="addItemModal.close()">
+            <button type="button" (click)="addItemModal.close()" title="Close Add Item Modal">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>                  
@@ -98,8 +99,12 @@
         </div>
 
         <div class="modal-footer flex justify-end mt-6">
-            <button type="button" class="btn btn-secondary btn-sm" (click)="addItemModal.close()">Cancel</button>
             <button type="button" 
+                class="btn btn-secondary btn-sm" 
+                title="Cancel adding item"
+                (click)="addItemModal.close()">Cancel</button>
+            <button type="button"
+                title="Add item" 
                 class="btn btn-primary ml-4 btn-sm" 
                 (click)="addItem(addItemModal)">Add</button>
         </div>
