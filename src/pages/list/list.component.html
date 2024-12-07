@@ -11,7 +11,7 @@
             class="btn btn-primary btn-sm px-4 py-2"
             title="Add Item"
             (click)="addItemModal.showModal()">
-                Add Item
+                + Add Item
         </button>
     </div>
 
@@ -29,7 +29,7 @@
                       <h2 class="card-title">{{ item.name }}</h2>
                       <p>{{ item.notes }}</p>
                       <div class="card-actions justify-end">
-                        <button class="btn btn-secondary" title="View Online">View Online</button>
+                        <a class="btn btn-secondary" title="View Online" [href]="item.url" target="_blank">View Online</a>
                       </div>
                     </div>
                 </div>
