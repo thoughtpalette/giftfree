@@ -8,7 +8,7 @@
             class="flex flex-col w-100" 
             [formGroup]="form"
             (ngSubmit)="login()">
-            <label class="form-control w-full mb-6" for="name">
+            <label class="form-control w-full mb-6" for="email">
                 <div class="label">
                   <span class="label-text">Email</span>
                 </div>
@@ -17,6 +17,7 @@
                 @let invalidEmail = email?.invalid && (email?.dirty || email?.touched );
                 <input
                     required
+                    id="email"
                     class="input input-bordered w-full" 
                     [class.input-error]="invalidEmail"
                     [class.mb-2]="invalidEmail"
@@ -28,12 +29,10 @@
                 />
 
                 @if(invalidEmail) {
-                    <form-error errorMessage="Please enter a valid email."></form-error>
+                    <form-error errorMessage="Enter a valid email."></form-error>
                 }
-
-                
             </label>
-            <label class="form-control w-full mb-6" for="price">
+            <label class="form-control w-full mb-6" for="password">
                 <div class="label">
                   <span class="label-text">Password</span>
                 </div>
@@ -42,6 +41,7 @@
                 @let invalidPassword = password?.invalid && (password?.dirty || password?.touched);
                 <input
                     required 
+                    id="password"
                     class="input input-bordered w-full" 
                     [class.input-error]="invalidPassword"
                     [class.mb-2]="invalidPassword"                    
@@ -53,7 +53,7 @@
                 />
 
                 @if(form.get('password')?.errors?.['required'] && (password?.dirty || password?.touched)) {
-                    <form-error errorMessage="Please enter a valid password."></form-error>
+                    <form-error errorMessage="Enter a valid password."></form-error>
                 }
 
                 @if(form.get('password')?.errors?.['pattern']) {

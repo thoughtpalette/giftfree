@@ -2,31 +2,128 @@
 
 <div class="container">
 
-    <div class="sm:container">
-        <form autocomplete="off" class="flex flex-col" (ngSubmit)="createUser()">
-            <label for="firstName">
-                First Name
-                <input class="border" type="text" name="firstname" [(ngModel)]="user.firstname">
+    
+    <div class="lg:w-2/5 mx-auto border p-6 rounded mt-24">
+        <h1 class="text-2xl font-bold mb-6">Sign Up</h1>
+        <form 
+            autocomplete="off" 
+            class="flex flex-col w-100" 
+            [formGroup]="form"
+            (ngSubmit)="createUser()">
+            <div class="flex gap-4">
+                <label class="form-control w-full mb-6" for="firstname">
+                    <div class="label">
+                      <span class="label-text">First name</span>
+                    </div>
+    
+                    @let firstname = form.get('firstname');
+                    @let invalidFirstName = firstname?.invalid && (firstname?.dirty || firstname?.touched );
+                    <input
+                        required
+                        id="firstname"
+                        class="input input-bordered w-full" 
+                        [class.input-error]="invalidFirstName"
+                        [class.mb-2]="invalidFirstName"
+                        type="text" 
+                        id="firstname"
+                        name="firstname"
+                        placeholder="John"
+                        formControlName="firstname"
+                    />
+    
+                    @if(invalidFirstName) {
+                        <form-error errorMessage="Enter your first name."></form-error>
+                    }
+                </label>
+    
+                <label class="form-control w-full mb-6" for="lastname">
+                    <div class="label">
+                      <span class="label-text">Last name</span>
+                    </div>
+    
+                    @let lastname = form.get('lastname');
+                    @let invalidLastName = lastname?.invalid && (lastname?.dirty || lastname?.touched );
+                    <input
+                        required
+                        id="lastname"
+                        class="input input-bordered w-full" 
+                        [class.input-error]="invalidLastName"
+                        [class.mb-2]="invalidLastName"
+                        type="text" 
+                        id="lastname"
+                        name="lastname"
+                        placeholder="Smith"
+                        formControlName="lastname"
+                    />
+    
+                    @if(invalidLastName) {
+                        <form-error errorMessage="Enter your last name."></form-error>
+                    }
+                </label>
+            </div>
+
+            <label class="form-control w-full mb-6" for="email">
+                <div class="label">
+                  <span class="label-text">Email</span>
+                </div>
+
+                @let email = form.get('email');
+                @let invalidEmail = email?.invalid && (email?.dirty || email?.touched );
+                <input
+                    required
+                    id="email"
+                    class="input input-bordered w-full" 
+                    [class.input-error]="invalidEmail"
+                    [class.mb-2]="invalidEmail"
+                    type="email" 
+                    id="email"
+                    name="email"
+                    placeholder="user@domain.com"
+                    formControlName="email"
+                />
+
+                @if(invalidEmail) {
+                    <form-error errorMessage="Enter a valid email."></form-error>
+                }
             </label>
-            
-            <label for="lastName">
-                Last Name
+            <label class="form-control w-full mb-6" for="password">
+                <div class="label">
+                  <span class="label-text">Password</span>
+                </div>
 
-                <input class="border" type="text" name="lasttname" [(ngModel)]="user.lastname">
+                @let password = form.get('password');
+                @let invalidPassword = password?.invalid && (password?.dirty || password?.touched);
+                <input
+                    required 
+                    id="password"
+                    class="input input-bordered w-full" 
+                    [class.input-error]="invalidPassword"
+                    [class.mb-2]="invalidPassword"                    
+                    type="password" 
+                    name="password"
+                    placeholder="..." 
+                    minlength="8"
+                    formControlName="password"
+                />
+
+                @if(form.get('password')?.errors?.['required'] && (password?.dirty || password?.touched)) {
+                    <form-error errorMessage="Enter a valid password."></form-error>
+                }
+
+                @if(form.get('password')?.errors?.['pattern']) {
+                    <form-error errorMessage="Must include one capital letter and one special character !@#$%^&*()"></form-error>
+                }
+
+                @if(form.get('password')?.errors?.['minlength']) {
+                    <form-error errorMessage="Must be at least 8 characters."></form-error>
+                }
             </label>
 
-            <label for="email">
-                Email
+            <span class="text-sm text-center mb-6">Have an account? 
+                <a class="btn-link" [routerLink]="['/login']">Login here</a>
+            </span>
 
-                <input class="border" type="email" name="email" [(ngModel)]="user.email">
-            </label>
-
-            <label for="password">
-                Password
-
-                <input class="border" type="password" name="password" [(ngModel)]="user.password">
-            </label>
-            <button class="border bg-slate-600 text-cyan-50">Create</button>
+            <button class="btn btn-primary" [disabled]="form.invalid">Login</button>
         </form>            
     </div>
 </div>
