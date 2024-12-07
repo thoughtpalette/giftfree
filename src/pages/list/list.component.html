@@ -3,11 +3,10 @@
 <div class="container p-20">
     @let listRes = list$ | async;
     @let list = listRes?.data?.getList;
-
-    
+    @let hasItems = list?.length > 0;
 
     <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold my-6">{{ list?.name }} - <a class="btn-link" [routerLink]="['/', list.author.id]">{{ list.author?.firstname }}</a></h1>
+        <h1 class="text-3xl font-bold my-6"><a class="btn-link" [routerLink]="['/', list?.author?.id]">{{ list?.author?.firstname }}</a> - {{ list?.name }}</h1>
         <button 
             class="btn btn-primary btn-sm px-4 py-2"
             title="Add Item"
@@ -16,25 +15,36 @@
         </button>
     </div>
 
-    <div class="test-grid">
-        @for(item of list?.items; track item.id) {
-            <!-- <div>{{item.name}} {{item.price | currency }} bought: {{item.purchased}} {{item.notes}} <a [href]="item.url" target="_blank">Link</a></div> -->
-            <div class="card card-compact bg-base-100 shadow-xl">
-                <figure>
-                  <img
-                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                    alt="{{item.name}}" />
-                </figure>
-                <div class="card-body">
-                  <h2 class="card-title">{{ item.name }}</h2>
-                  <p>{{ item.notes }}</p>
-                  <div class="card-actions justify-end">
-                    <button class="btn btn-secondary" title="View Online">View Online</button>
-                  </div>
+    @if(hasItems) {
+        <div class="test-grid">
+            @for(item of list?.items; track item.id) {
+                <!-- <div>{{item.name}} {{item.price | currency }} bought: {{item.purchased}} {{item.notes}} <a [href]="item.url" target="_blank">Link</a></div> -->
+                <div class="card card-compact bg-base-100 shadow-xl">
+                    <figure>
+                      <img
+                        src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                        alt="{{item.name}}" />
+                    </figure>
+                    <div class="card-body">
+                      <h2 class="card-title">{{ item.name }}</h2>
+                      <p>{{ item.notes }}</p>
+                      <div class="card-actions justify-end">
+                        <button class="btn btn-secondary" title="View Online">View Online</button>
+                      </div>
+                    </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    } @else {
+        <empty-container 
+            icon="gift"
+            title="No Items"
+            description="Get started by adding an item."
+            [showButton]="true"
+            buttonText="Add item"
+            (onButtonClick)="addItemModal.showModal()"
+        />
+    }
 
     <dialog class="add-item-modal w-1/2 p-5 rounded" #addItemModal>
         <div class="modal-header flex justify-between mb-4">

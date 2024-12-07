@@ -6,6 +6,7 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorComponent } from '../../shared/components/form-error/form-error.component';
+import { EmptyContainerComponent } from '../../shared/components/empty-container/empty-container.component';
 
 const GET_LISTS = gql`
   query getWishLists($id: String!) {
@@ -40,7 +41,14 @@ const CREATE_LIST = gql`
 @Component({
   selector: 'lists',
   standalone: true,
-  imports: [HeaderNavComponent, AsyncPipe, RouterLink, ReactiveFormsModule, FormErrorComponent],
+  imports: [
+    HeaderNavComponent,
+    AsyncPipe,
+    RouterLink,
+    ReactiveFormsModule,
+    FormErrorComponent,
+    EmptyContainerComponent
+  ],
   templateUrl: './lists.component.html',
   styleUrl: './lists.component.scss'
 })
@@ -77,7 +85,6 @@ export class ListsComponent implements OnInit {
         authorId: this.route.snapshot.paramMap.get('userId')
       }
     }}).subscribe((res) => {
-      console.log(res)
       const id = (res.data as AddListRes).addList.authorId
 
       // TODO: Should be a better way to handle this
