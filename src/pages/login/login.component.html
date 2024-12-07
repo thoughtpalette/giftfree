@@ -6,52 +6,70 @@
         <form 
             autocomplete="off" 
             class="flex flex-col w-100" 
+            [formGroup]="form"
             (ngSubmit)="login()">
             <label class="form-control w-full mb-6" for="name">
                 <div class="label">
                   <span class="label-text">Email</span>
                 </div>
 
-                @let emailInvalid = email.invalid && (email.dirty || email.touched);
+                @let email = form.get('email');
+                @let invalidEmail = email?.invalid && (email?.dirty || email?.touched );
                 <input
                     required
                     class="input input-bordered w-full" 
-                    [class.input-error]="emailInvalid"
-                    [class.mb-2]="emailInvalid"
-                    type="text" 
+                    [class.input-error]="invalidEmail"
+                    [class.mb-2]="invalidEmail"
+                    type="email" 
                     id="email"
                     name="email"
-                    #email="ngModel"
-                    placeholder="Enter your email"
-                    [(ngModel)]="form.email"
+                    placeholder="user@domain.com"
+                    formControlName="email"
                 />
 
-                @if(email.hasError('required') && (email.dirty || email.touched)) {
-                    <span class="error-msg text-red-600 pl-4">Email is required.</span>
+                @if(invalidEmail) {
+                    <form-error errorMessage="Please enter a valid email."></form-error>
                 }
+
+                
             </label>
             <label class="form-control w-full mb-6" for="price">
                 <div class="label">
                   <span class="label-text">Password</span>
                 </div>
+
+                @let password = form.get('password');
+                @let invalidPassword = password?.invalid && (password?.dirty || password?.touched);
                 <input
                     required 
                     class="input input-bordered w-full" 
-                    [class.input-error]="password.invalid && (password.dirty || password.touched)"
+                    [class.input-error]="invalidPassword"
+                    [class.mb-2]="invalidPassword"                    
                     type="password" 
                     name="password"
-                    #password="ngModel"
-                    placeholder="Password" 
-                    [(ngModel)]="form.password"
+                    placeholder="..." 
+                    minlength="8"
+                    formControlName="password"
                 />
+
+                @if(form.get('password')?.errors?.['required'] && (password?.dirty || password?.touched)) {
+                    <form-error errorMessage="Please enter a valid password."></form-error>
+                }
+
+                @if(form.get('password')?.errors?.['pattern']) {
+                    <form-error errorMessage="Must include one capital letter and one special character !@#$%^&*()"></form-error>
+                }
+
+                @if(form.get('password')?.errors?.['minlength']) {
+                    <form-error errorMessage="Must be at least 8 characters."></form-error>
+                }
             </label>
 
-            <span class="text-sm text-center mb-4">No account? 
+            <span class="text-sm text-center mb-6">No account? 
                 <a class="btn-link" [routerLink]="['/signup']">Sign up here</a>
             </span>
 
-            @let formValid = email.valid && password.valid;
-            <button class="btn btn-primary" [disabled]="!formValid">Login</button>
+            <button class="btn btn-primary" [disabled]="form.invalid">Login</button>
         </form>
     </div>
 </div>
