@@ -2,20 +2,22 @@
 
 @let listsRes = lists$ | async;
 @let lists = listsRes?.data?.getLists;
-@let hasLists = lists.length > 0;
+@let hasLists = lists?.length > 0;
 
 <div class="container p-20">
     <div class="flex justify-between items-center">
         <h1 class="text-3xl font-bold my-6">Welcome Chris!</h1>
-        <button 
-            class="btn btn-primary btn-sm px-4 py-2">
+
+        @if(hasLists) {
+            <button class="btn btn-primary btn-sm px-4 py-2" (click)="createListModal.showModal()">
                 + Add list
-        </button>
+            </button>
+        }
     </div>
 
     @if(hasLists) {
         <div class="test-grid mx-auto">
-            @for(list of lists; track list.id) {
+            @for(list of lists; track list?.id) {
                 <div class="card card-compact bg-base-100 shadow-xl">
                     <figure>
                       <img
@@ -39,10 +41,71 @@
             </svg>              
             <h2 class="text-2xl font-bold mb-1">No Wishlists</h2>
             <p>Get started by adding a wishlist.</p>
-            <button class="btn btn-primary mt-4" title="Create List">
+            <button class="btn btn-primary mt-4" title="Create List" (click)="createListModal.showModal()">
                 Create List
             </button>
         </div>
     }
+
+    <dialog class="add-item-modal w-1/2 p-5 rounded" #createListModal>
+        <div class="modal-header flex justify-between mb-4">
+            <h3 class="text-lg font-bold">Create List</h3>
+            <button type="button" (click)="createListModal.close()" title="Close create list modal">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>                  
+            </button>
+        </div>
+        <div class="modal-body">
+            <form 
+            autocomplete="off" 
+            class="flex flex-col w-100" 
+            [formGroup]="form">
+                <div class="flex gap-4">
+                    <label class="form-control w-full mb-6" for="name">
+                        <div class="label">
+                            <span class="label-text">Title</span>
+                        </div>
+        
+                        @let name = form.get('name');
+                        @let invalidname = name?.invalid && (name?.dirty || name?.touched );
+                        <input
+                            required
+                            id="name"
+                            class="input input-bordered w-full" 
+                            [class.input-error]="invalidname"
+                            [class.mb-2]="invalidname"
+                            type="text" 
+                            id="name"
+                            name="name"
+                            placeholder="Birthday"
+                            formControlName="name"
+                        />
+        
+                        @if(invalidname) {
+                            <form-error errorMessage="Enter a list name."></form-error>
+                        }
+                    </label>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer flex justify-end mt-6">
+            <button type="button" 
+                class="btn btn-secondary btn-sm" 
+                title="Cancel adding item"
+                (click)="createListModal.close()">
+                    Cancel
+            </button>
+            <button
+                type="submit"
+                title="Add item" 
+                class="btn btn-primary ml-4 btn-sm"
+                [disabled]="form.invalid"
+                (click)="createList(createListModal)">
+                    Save List
+            </button>
+        </div>
+    </dialog>
 
 </div>
