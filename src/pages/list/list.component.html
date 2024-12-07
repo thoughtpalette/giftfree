@@ -3,7 +3,7 @@
 <div class="container p-20">
     @let listRes = list$ | async;
     @let list = listRes?.data?.getList;
-    @let hasItems = list?.length > 0;
+    @let hasItems = list?.items?.length > 0;
 
     <div class="flex justify-between items-center">
         <h1 class="text-3xl font-bold my-6"><a class="btn-link" [routerLink]="['/', list?.author?.id]">{{ list?.author?.firstname }}</a> - {{ list?.name }}</h1>
