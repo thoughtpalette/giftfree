@@ -30,9 +30,23 @@ interface AddListRes {
   }
 }
 
+interface DeleteListRes {
+  deleteList: {
+    authorId: string
+  }
+}
+
 const CREATE_LIST = gql`
   mutation createList($data: AddListInput!) {
     addList(data: $data) {
+      authorId
+    }
+  }
+`
+
+const DELETE_LIST = gql`
+  mutation deleteList($id: String!) {
+    deleteList(id: $id) {
       authorId
     }
   }
@@ -69,13 +83,17 @@ export class ListsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.lists$ = this.getLists()
+    this.lists$ = this.getLists(this.route.snapshot.paramMap.get('userId') ?? '')
   }
 
-  private getLists() {
-    return this.apollo.query({ query: GET_LISTS, variables: {
-      id: this.route.snapshot.paramMap.get('userId')
-    }})
+  private getLists(id: string) {
+    return this.apollo.query({ 
+        query: GET_LISTS, 
+        variables: {
+          id
+        },
+        fetchPolicy: 'network-only'
+      })
   }
 
   createList(modalRef: HTMLDialogElement) {
@@ -86,18 +104,24 @@ export class ListsComponent implements OnInit {
       }
     }}).subscribe((res) => {
       const id = (res.data as AddListRes).addList.authorId
-
       // TODO: Should be a better way to handle this
-      this.lists$ = this.apollo.query({ 
-        query: GET_LISTS, 
-        variables: {
-          id: id
-        },
-        fetchPolicy: 'network-only',
-      })
+      this.lists$ = this.getLists(id)
     })
 
     this.form.reset()
     modalRef.close()
+  }
+
+  deleteList(listId: string) {
+    this.apollo.mutate({
+      mutation: DELETE_LIST,
+      variables: {
+        id: listId,
+      }
+    }).subscribe((res) => {
+      const id = (res.data as DeleteListRes).deleteList.authorId
+      // TODO: Should be a better way to handle this
+      this.lists$ = this.getLists(id)
+    })
   }
 }
