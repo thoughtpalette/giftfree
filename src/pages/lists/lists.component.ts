@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HeaderNavComponent } from "../../shared/header-nav/header-nav.component";
-import { Observable } from 'rxjs';
+import { first, Observable } from 'rxjs';
 import { Apollo, gql } from 'apollo-angular';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorComponent } from '../../shared/components/form-error/form-error.component';
 import { EmptyContainerComponent } from '../../shared/components/empty-container/empty-container.component';
@@ -26,7 +26,7 @@ const GET_LISTS = gql`
 
 interface AddListRes {
   addList: {
-    authorId: string
+    id: string
   }
 }
 
@@ -39,7 +39,7 @@ interface DeleteListRes {
 const CREATE_LIST = gql`
   mutation createList($data: AddListInput!) {
     addList(data: $data) {
-      authorId
+      id
     }
   }
 `
@@ -73,6 +73,7 @@ export class ListsComponent implements OnInit {
   constructor(
       private apollo: Apollo,
       private route: ActivatedRoute,
+      private router: Router,
       private fb: FormBuilder) 
   {
     this.form = this.fb.group({
@@ -102,10 +103,9 @@ export class ListsComponent implements OnInit {
         ...this.form.value,
         authorId: this.route.snapshot.paramMap.get('userId')
       }
-    }}).subscribe((res) => {
-      const id = (res.data as AddListRes).addList.authorId
-      // TODO: Should be a better way to handle this
-      this.lists$ = this.getLists(id)
+    }}).pipe(first()).subscribe((res) => {
+      const id = (res.data as AddListRes).addList.id
+      this.router.navigate(['/list', id])
     })
 
     this.form.reset()

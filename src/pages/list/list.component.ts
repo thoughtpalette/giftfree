@@ -20,6 +20,12 @@ interface AddItemResp {
   }
 }
 
+interface DeleteItemRes {
+  deleteItem: {
+    id: string
+  }
+}
+
 const initialForm: AddItemForm = {
   name: '',
   url: '',
@@ -57,9 +63,22 @@ const ADD_ITEM = gql`
 `
 
 const REMOVE_ITEM = gql`
-  mutation deleteItem($id: ID!, $listId: ID!) {
+  mutation deleteItem($id: String!, $listId: String!) {
     deleteItem(id: $id, listId: $listId){
-      list
+      id,
+      name,
+      author {
+        id,
+        firstname
+      },
+      items {
+        id,
+        name,
+        notes,
+        price,
+        purchased,
+        url
+      } 
     }
   }
 `
@@ -85,12 +104,17 @@ export class ListComponent {
   constructor(private apollo: Apollo, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.list$ = this.apollo.query({ 
+    this.list$ = this.getList(this.route.snapshot.paramMap.get('listId') ?? '')
+  }
+
+  private getList(id: string) {
+    return this.apollo.query({ 
         query: GET_LIST, 
         variables: {
-          listId: this.route.snapshot.paramMap.get('listId')
+          listId: id
         },
-    })
+        fetchPolicy: 'network-only',
+      })
   }
 
   addItem(modalRef: HTMLDialogElement) {
@@ -103,18 +127,25 @@ export class ListComponent {
       }
     }}).subscribe((res) => {
       const listId = (res.data as AddItemResp).addItem.listId
-
       // TODO: Should be a better way to handle this
-      this.list$ = this.apollo.query({ 
-        query: GET_LIST, 
-        variables: {
-          listId
-        },
-        fetchPolicy: 'network-only',
-      })
+      this.list$ = this.getList(listId)
     })
 
     this.form = { ...initialForm }
     modalRef.close()
+  }
+
+  deleteItem(id: string) {
+    this.apollo.mutate({
+      mutation: REMOVE_ITEM,
+      variables: {
+        id,
+        listId: this.route.snapshot.paramMap.get('listId')
+      }
+    }).subscribe((res) => {
+      const id = (res.data as DeleteItemRes).deleteItem.id
+      // TODO: Should be a better way to handle this
+      this.list$ = this.getList(id)
+    })
   }
 }
