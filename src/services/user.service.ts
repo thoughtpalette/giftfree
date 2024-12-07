@@ -18,6 +18,14 @@ interface LoginResp {
   }
 }
 
+interface SignupResp {
+  signup: {
+    user: {
+      id: string
+    }
+  }
+}
+
 const LOGIN_USER = gql`
   mutation Mutation($data: LoginInput!) {
     login(data: $data) {
@@ -53,7 +61,6 @@ export class UserService {
       mutation: LOGIN_USER, 
       variables: { data }
     }).subscribe((res) => {
-      console.log(res)
       const userId = (res.data as LoginResp)?.login?.user.id
       this.router.navigate([userId])
     })
@@ -65,6 +72,9 @@ export class UserService {
     this.apollo.mutate({ 
       mutation: CREATE_USER, 
       variables: { user }
-    }).subscribe(res => console.log(res))
+    }).subscribe(res => {
+      const userId = (res.data as SignupResp)?.signup?.user.id
+      this.router.navigate([userId])
+    })
   }
 }

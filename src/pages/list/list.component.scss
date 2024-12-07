@@ -1,0 +1,11 @@
+.add-item-modal {
+    &::backdrop {
+        background: #00000040;
+    }
+}
+
+.test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}

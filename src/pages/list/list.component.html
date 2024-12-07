@@ -2,7 +2,106 @@
 
 <div class="container mx-auto">
     @let listRes = list$ | async;
-    @let list = listRes.data.getList;
+    @let list = listRes?.data?.getList;
 
-    {{ list | json }}
+    
+
+    <div class="flex justify-between items-center">
+        <h1 class="text-3xl font-bold my-6">{{list?.name}}</h1>
+        <button 
+            class="btn btn-primary btn-sm px-4 py-2"
+            (click)="addItemModal.showModal()">
+                Add Item
+        </button>
+    </div>
+
+    <div class="test-grid">
+        @for(item of list?.items; track item.id) {
+            <!-- <div>{{item.name}} {{item.price | currency }} bought: {{item.purchased}} {{item.notes}} <a [href]="item.url" target="_blank">Link</a></div> -->
+            <div class="card card-compact bg-base-100 shadow-xl">
+                <figure>
+                  <img
+                    src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                    alt="{{item.name}}" />
+                </figure>
+                <div class="card-body">
+                  <h2 class="card-title">{{ item.name }}</h2>
+                  <p>{{ item.notes }}</p>
+                  <div class="card-actions justify-end">
+                    <button class="btn btn-secondary">View Online</button>
+                  </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <dialog class="add-item-modal w-1/2 p-5 rounded" #addItemModal>
+        <div class="modal-header flex justify-between mb-4">
+            <h3 class="text-lg font-bold">Add Item</h3>
+            <button type="button" (click)="addItemModal.close()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>                  
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="flex flex-col" [autofocus]="false">
+                <label class="form-control w-full max-w-xs" for="name">
+                    <div class="label">
+                      <span class="label-text">Item Name</span>
+                    </div>
+                    <input 
+                        class="input input-bordered w-full max-w-xs" 
+                        type="text" 
+                        id="name"
+                        name="name"
+                        placeholder="Item Name"
+                        [(ngModel)]="form.name"
+                    />
+                </label>
+                <label class="form-control w-full max-w-xs" for="price">
+                    <div class="label">
+                      <span class="label-text">Price</span>
+                    </div>
+                    <input 
+                        class="input input-bordered w-full max-w-xs" 
+                        type="text" 
+                        name="price"
+                        placeholder="Price" 
+                        [(ngModel)]="form.price"
+                    />
+                </label>
+                <label class="form-control w-full max-w-xs" for="url">
+                    <div class="label">
+                      <span class="label-text">Link</span>
+                    </div>
+                    <input 
+                        class="input input-bordered w-full max-w-xs" 
+                        type="text" 
+                        name="url"
+                        placeholder="Link" 
+                        [(ngModel)]="form.url"
+                    />
+                </label>                
+                  <label class="form-control" for="notes">
+                    <div class="label">
+                        <span class="label-text">Notes</span>
+                    </div>
+                    <textarea 
+                        class="textarea textarea-bordered h-24" 
+                        name="notes"
+                        placeholder="Description..."
+                        [(ngModel)]="form.notes"
+                    ></textarea>
+                  </label>
+            </form>
+        </div>
+
+        <div class="modal-footer flex justify-end mt-6">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="addItemModal.close()">Cancel</button>
+            <button type="button" 
+                class="btn btn-primary ml-4 btn-sm" 
+                (click)="addItem(addItemModal)">Add</button>
+        </div>
+      </dialog>
 </div>
