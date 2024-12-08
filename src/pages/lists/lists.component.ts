@@ -12,6 +12,9 @@ const GET_LISTS = gql`
     getLists(userId: $id) {
       id,
       name,
+      author {
+        firstname
+      },
       items {
         id,
         name,
@@ -59,7 +62,7 @@ const DELETE_LIST = gql`
     RouterLink,
     ReactiveFormsModule,
     FormErrorComponent,
-    EmptyContainerComponent
+    EmptyContainerComponent,
   ],
   templateUrl: './lists.component.html',
   styleUrl: './lists.component.scss'

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { LoginForm } from '../pages/login/login.component';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 interface SignupInput {
   email: String
@@ -15,6 +16,7 @@ interface LoginResp {
     user: {
       id: string
     }
+    accessToken: string
   }
 }
 
@@ -23,6 +25,7 @@ interface SignupResp {
     user: {
       id: string
     }
+    accessToken: string
   }
 }
 
@@ -45,6 +48,7 @@ const CREATE_USER = gql`
         email,
         id,
       }
+      accessToken
     }
   }
 `
@@ -53,8 +57,34 @@ const CREATE_USER = gql`
   providedIn: 'root'
 })
 export class UserService {
+  private _isLoggedIn = new BehaviorSubject(false)
+  isLoggedIn$ = this._isLoggedIn.asObservable()
+  _userId?: string
 
-  constructor(private apollo: Apollo, private router: Router) { }
+  setUserId(id: string) {
+    this._userId = id
+  }
+
+  setIsLoggedIn(isLoggedIn: boolean) {
+    this._isLoggedIn.next(isLoggedIn)
+  }
+
+  get isLoggedIn() {
+    return this._isLoggedIn.getValue()
+  }
+
+  get userId() {
+    return this._userId
+  }
+
+  constructor(private apollo: Apollo, private router: Router) { 
+    const userId = window.localStorage.getItem('USER_ID');
+    // TODO: Handle this better
+    if (window.localStorage.getItem('TOKEN') && userId) {
+      this.setIsLoggedIn(true)
+      this.setUserId(userId)
+    }
+  }
 
   login(data: LoginForm) {
     this.apollo.mutate({ 
@@ -62,11 +92,22 @@ export class UserService {
       variables: { data }
     }).subscribe((res) => {
       const userId = (res.data as LoginResp)?.login?.user.id
+      const token = (res.data as LoginResp)?.login?.accessToken
+
+      window.localStorage.setItem('USER_ID', userId)
+      window.localStorage.setItem('TOKEN', token)
+
+      this.setIsLoggedIn(true)
       this.router.navigate([userId])
     })
   }
 
-  logout() {}
+  logout() {
+    this.setIsLoggedIn(false)
+    window.localStorage.removeItem('TOKEN')
+    window.localStorage.removeItem('USER_ID')
+    this.router.navigate(['/'])
+  }
 
   create(user: SignupInput){
     this.apollo.mutate({ 
@@ -74,6 +115,12 @@ export class UserService {
       variables: { user }
     }).subscribe(res => {
       const userId = (res.data as SignupResp)?.signup?.user.id
+      const token = (res.data as SignupResp)?.signup?.accessToken
+
+      window.localStorage.setItem('TOKEN', token)
+      window.localStorage.setItem('USER_ID', userId)      
+
+      this.setIsLoggedIn(true)
       this.router.navigate([userId])
     })
   }

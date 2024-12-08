@@ -1,5 +1,7 @@
+@let isLoggedIn = isLoggedIn$ | async;
+
 <header class="navbar bg-base-100 border-b-2">
-    <div class="navbar-start">
+    <div class="flex-1">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
           <svg
@@ -31,15 +33,48 @@
       </div>
       <a class="btn btn-ghost text-3xl caveat-regular hover:bg-transparent hover:text-primary" [routerLink]="['/']">PresentsTracker.com</a>
     </div>
-    <div class="flex-none">
-      <ul class="menu menu-horizontal px-1">
+
+    <div>
+      <ul class="menu menu-horizontal px-1 mr-10">
+        @if(isLoggedIn) {
+          <li><a title="My lists" [routerLink]="[userId]">My Lists</a></li>  
+        }
         <li><a title="Frequently asked questions" [routerLink]="['/frequently-asked-questions']">FAQs</a></li>
       </ul>
-    </div>
-    <div class="navbar-end">
-      <a class="btn btn-ghost link hover:bg-transparent hover:text-secondary" [routerLink]="['/login']">
-        Login
-      </a>
-      <a class="btn btn-sm btn-primary" [routerLink]="['/signup']">Sign Up</a>
+      
+      <div>
+        @if(isLoggedIn) {
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+              <div class="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://i.pravatar.cc/300" />
+              </div>
+            </div>
+            <ul
+              tabindex="0"
+              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+              <li>
+                <a class="justify-between" [routerLink]="[userId]">
+                  My Lists
+                </a>
+              </li>            
+              <!-- <li>
+                <a class="justify-between">
+                  Profile
+                </a>
+              </li>
+              <li><a>Settings</a></li> -->
+              <li><a (click)="logout()">Logout</a></li>
+            </ul>
+          </div>
+        } @else {
+          <a class="btn btn-ghost link hover:bg-transparent hover:text-secondary" [routerLink]="['/login']">
+            Login
+          </a>
+          <a class="btn btn-sm btn-primary" [routerLink]="['/signup']">Sign Up</a>
+        }
+      </div>
     </div>
 </header>

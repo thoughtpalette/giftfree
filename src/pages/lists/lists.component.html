@@ -4,7 +4,9 @@
 
 <div class="container p-20">
     <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold my-6">Welcome Chris!</h1>
+        @if(hasLists) {
+            <h1 class="text-3xl font-bold my-6">{{ lists[0]?.author?.firstname }} Lists</h1>
+        }
 
         @if(hasLists) {
             <button class="btn btn-primary btn-sm px-4 py-2" (click)="createListModal.showModal()">
