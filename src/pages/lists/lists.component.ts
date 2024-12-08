@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HeaderNavComponent } from "../../shared/header-nav/header-nav.component";
 import { first, Observable } from 'rxjs';
 import { Apollo, gql } from 'apollo-angular';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorComponent } from '../../shared/components/form-error/form-error.component';
@@ -56,7 +55,6 @@ const DELETE_LIST = gql`
   selector: 'lists',
   standalone: true,
   imports: [
-    HeaderNavComponent,
     AsyncPipe,
     RouterLink,
     ReactiveFormsModule,
@@ -105,6 +103,7 @@ export class ListsComponent implements OnInit {
       }
     }}).pipe(first()).subscribe((res) => {
       const id = (res.data as AddListRes).addList.id
+      console.log(id)
       this.router.navigate(['/list', id])
     })
 

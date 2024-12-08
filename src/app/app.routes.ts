@@ -4,6 +4,7 @@ import { LoginComponent } from '../pages/login/login.component';
 import { SignupComponent } from '../pages/signup/signup.component';
 import { ListsComponent } from '../pages/lists/lists.component';
 import { ListComponent } from '../pages/list/list.component';
+import { FaqComponent } from '../pages/faq/faq.component';
 
 // TODO: Route guards
 export const routes: Routes = [
@@ -19,6 +20,10 @@ export const routes: Routes = [
         path: 'signup',
         component: SignupComponent
     },
+    {
+        path: 'frequently-asked-questions',
+        component: FaqComponent
+    },    
     {
         path: ':userId',
         component: ListsComponent

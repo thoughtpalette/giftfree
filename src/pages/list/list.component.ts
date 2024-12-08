@@ -1,9 +1,8 @@
-import { AsyncPipe, CurrencyPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { HeaderNavComponent } from '../../shared/header-nav/header-nav.component';
 import { FormsModule } from '@angular/forms';
 import { EmptyContainerComponent } from '../../shared/components/empty-container/empty-container.component';
 
@@ -87,7 +86,6 @@ const REMOVE_ITEM = gql`
   selector: 'list',
   standalone: true,
   imports: [
-    HeaderNavComponent,
     AsyncPipe,
     CurrencyPipe,
     FormsModule,

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HeaderNavComponent } from '../../shared/header-nav/header-nav.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormErrorComponent } from '../../shared/components/form-error/form-error.component';
 import { EMAIL_PATTERN, PASSWORD_PATTERN } from '../../shared/utils/input-patterns';
 import { RouterLink } from '@angular/router';
@@ -9,7 +8,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'signup',
   standalone: true,
-  imports: [HeaderNavComponent, ReactiveFormsModule, FormErrorComponent, RouterLink],
+  imports: [ReactiveFormsModule, FormErrorComponent, RouterLink],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })

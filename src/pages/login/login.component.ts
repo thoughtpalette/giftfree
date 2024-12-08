@@ -1,6 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms'
-import { HeaderNavComponent } from "../../shared/header-nav/header-nav.component";
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { UserService } from '../../services/user.service';
 import { RouterLink } from '@angular/router';
 import { FormErrorComponent } from '../../shared/components/form-error/form-error.component';
@@ -15,7 +14,7 @@ export interface LoginForm {
 @Component({
   selector: 'login',
   standalone: true,
-  imports: [HeaderNavComponent, RouterLink, FormErrorComponent, ReactiveFormsModule, JsonPipe],
+  imports: [RouterLink, FormErrorComponent, ReactiveFormsModule, JsonPipe],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
