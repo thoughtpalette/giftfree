@@ -16,11 +16,11 @@
     </div>
 
     @if(hasLists) {
-        <div class="test-grid mx-auto">
+        <div class="test-grid">
             @for(list of lists; track list?.id) {
-                <div class="card card-compact bg-base-100 shadow-xl relative">
+                <div class="card card-compact bg-base-100 shadow-xl relative rounded-md">
                     <div class="dropdown dropdown-end absolute right-0">
-                        <div tabindex="0" role="button" class="btn border-0 m-1 bg-transparent hover:bg-white">
+                        <div tabindex="0" role="button" class="btn border-0 m-1 bg-transparent hover:bg-white shadow-none">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
                             </svg>                              
@@ -49,18 +49,31 @@
 
                     <figure>
                       <img
+                        class="rounded-t-md"
                         src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                        alt="{{list.name}}" />
+                        alt="{{ list.name }}" />
                     </figure>
                     <div class="card-body">
                       <h2 class="card-title">{{ list.name }}</h2>
                       <!-- <p>{{ item.notes }}</p> -->
                       <div class="card-actions justify-end">
+                        @if(list.description) {
+                            <p>{{ list.description }}</p>
+                        }
+
                         <a class="btn btn-secondary" [routerLink]="['/list', list.id]" title="View List">View List</a>
                       </div>
                     </div>
                 </div>
             }
+
+            <div class="card card-compact relative rounded-md justify-center items-center bg-white border">
+                <div class="card-body justify-center">
+                  <div class="card-actions justify-end">
+                    <div class="btn btn-primary btn-lg" (click)="createListModal.showModal()">+ Add List</div>
+                  </div>
+                </div>
+            </div>
         </div>
     } @else {
         <empty-container 
@@ -87,7 +100,7 @@
             autocomplete="off" 
             class="flex flex-col w-100" 
             [formGroup]="form">
-                <div class="flex gap-4">
+                <div class="flex flex-col gap-4">
                     <label class="form-control w-full mb-6" for="name">
                         <div class="label">
                             <span class="label-text">Title</span>
@@ -104,13 +117,27 @@
                             type="text" 
                             id="name"
                             name="name"
-                            placeholder="Birthday"
+                            placeholder="My Birthday"
                             formControlName="name"
                         />
         
                         @if(invalidname) {
                             <form-error errorMessage="Enter a list name."></form-error>
                         }
+                    </label>
+
+                    <label class="form-control w-full mb-6" for="description">
+                        <div class="label">
+                            <span class="label-text">Description</span>
+                        </div>
+        
+                        <textarea
+                            id="description"
+                            class="textarea textarea-bordered w-full" 
+                            id="description"
+                            name="description"
+                            placeholder="This list is for my birthday party."
+                            formControlName="description"></textarea>
                     </label>
                 </div>
             </form>

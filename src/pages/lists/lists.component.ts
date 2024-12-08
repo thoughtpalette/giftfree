@@ -12,6 +12,7 @@ const GET_LISTS = gql`
     getLists(userId: $id) {
       id,
       name,
+      description,
       author {
         firstname
       },
